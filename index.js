@@ -41,9 +41,11 @@ app.use(async (req, res, next) => {
   if (req.method === 'POST') {
     dataToSign = JSON.stringify(req.body)
     req.body.userId = userId
+    req.body.apiSecret = apiSecret
   } else if (req.method === 'GET') {
     dataToSign = req.originalUrl
     req.query.userId = userId
+    req.query.apiSecret = apiSecret
   } else {
     return res.status(405).send('Method not allowed')
   }
