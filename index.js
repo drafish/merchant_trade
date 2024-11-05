@@ -4,6 +4,8 @@ const bodyParser = require('body-parser')
 const crypto = require('crypto')
 const { knex } = require('./mysql')
 const orders = require('./orders')
+const price = require('./price')
+const deposit = require('./deposit')
 
 const app = express()
 
@@ -60,6 +62,8 @@ app.use(async (req, res, next) => {
 })
 
 app.use('/order', orders.router)
+app.use('/price', price.router)
+app.use('/deposit', deposit.router)
 
 app.use('*', (err, req, res, next) => {
   if (err) next(err)

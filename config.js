@@ -17,9 +17,16 @@ const config = {
     otcEmailN8NWebhook: 'https://n8n.coinut.net/webhook/5ffcba80-3868-4a04-8603-e0f0c281cfcc'
   },
   coinutBankAccount: {
-    name: 'COINUT PTE LTD',
-    accountNo: '0729075441',
-    bankName: 'DBS Bank',
+    USD: {
+      name: 'COINUT PTE LTD',
+      accountNo: '0729075441',
+      bankName: 'DBS Bank',
+    },
+    SGD: {
+      name: 'COINUT PTE LTD',
+      accountNo: '0729075441',
+      bankName: 'DBS Bank',
+    }
   }
 }
 module.exports = config
