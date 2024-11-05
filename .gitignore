@@ -1,0 +1,5 @@
+node_modules
+app.json
+mysql
+yarn.lock
+package-lock.json

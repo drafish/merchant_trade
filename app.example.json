@@ -1,0 +1,21 @@
+{
+  "name": "Merchant Trade API Server",
+  "script": "index.js",
+  "args": [],
+  "node_args": "",
+  "restart_delay": "1000",
+  "log_date_format": "YYYY-MM-DD HH:mm Z",
+  "watch": [
+    "index.js"
+   ],
+  "ignore_watch": [
+    "*.swp"
+  ],
+  "env": {
+    "mysql_host": "127.0.0.1",
+    "mysql_port": 3306,
+    "mysql_user": "test",
+    "mysql_pass": "test",
+    "mysql_db_name": "test"
+  }
+}
