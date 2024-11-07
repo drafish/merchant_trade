@@ -11,6 +11,12 @@ router.post('/new', async (req, res) => {
     if (!side || !pair || !quantity || !priceId || !merchant_ref_id) {
       return res.json({ status: 'params_missing' })
     }
+    const oldOrder = await knex.select([
+      'id', 'pair', 'side', 'quantity', 'status', 'price', 'merchant_ref_id', 'create_time'
+    ]).from('hashnut_otc_orders').where({ merchant_ref_id }).first()
+    if (oldOrder) {
+      return res.json({ status: 'merchant_ref_id_exist' })
+    }
     if (isNaN(quantity) || Number(quantity) <= 0) {
       return res.json({ status: 'paramter_format_error' })
     }
