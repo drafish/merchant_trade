@@ -64,6 +64,9 @@ router.get('/query', async (req, res) => {
     const order = await knex.select([
       'id', 'pair', 'side', 'quantity', 'status', 'price', 'merchant_ref_id', 'create_time'
     ]).from('hashnut_otc_orders').where({ merchant_ref_id }).first()
+    if (!order) {
+      return res.json({ status: 'order_not_exist' })
+    }
     const signature = crypto
       .createHmac('sha256', apiSecret)
       .update(JSON.stringify(order))
