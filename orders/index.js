@@ -7,7 +7,10 @@ const router = express.Router()
 
 router.post('/new', async (req, res) => {
   try {
-    const { side, pair, quantity, userId, priceId, apiSecret } = req.body
+    const { side, pair, quantity, userId, priceId, apiSecret, merchant_ref_id } = req.body
+    if (!side || !pair || !quantity || !priceId || !merchant_ref_id) {
+      return res.json({ status: 'params_missing' })
+    }
     if (isNaN(quantity) || Number(quantity) <= 0) {
       return res.json({ status: 'paramter_format_error' })
     }
@@ -25,6 +28,7 @@ router.post('/new', async (req, res) => {
     const order_id = crypto.randomUUID()
     await knex('hashnut_otc_orders').insert({
       id: order_id,
+      merchant_ref_id,
       pair,
       side: side,
       user_id: userId,
@@ -34,8 +38,8 @@ router.post('/new', async (req, res) => {
       create_time: now,
     })
     const order = await knex.select([
-      'id', 'pair', 'side', 'quantity', 'price_id', 'status', 'price'
-    ]).from('hashnut_otc_orders').where({ id: order_id }).first()
+      'id', 'pair', 'side', 'quantity', 'status', 'price', 'merchant_ref_id', 'create_time'
+    ]).from('hashnut_otc_orders').where({ merchant_ref_id }).first()
     const signature = crypto
       .createHmac('sha256', apiSecret)
       .update(JSON.stringify(order))
@@ -49,11 +53,11 @@ router.post('/new', async (req, res) => {
 })
 
 router.get('/query', async (req, res) => {
-  const { id, apiSecret } = req.query
+  const { merchant_ref_id, apiSecret } = req.query
   try {
     const order = await knex.select([
-      'id', 'pair', 'side', 'quantity', 'price_id', 'status', 'price'
-    ]).from('hashnut_otc_orders').where({ id }).first()
+      'id', 'pair', 'side', 'quantity', 'status', 'price', 'merchant_ref_id', 'create_time'
+    ]).from('hashnut_otc_orders').where({ merchant_ref_id }).first()
     const signature = crypto
       .createHmac('sha256', apiSecret)
       .update(JSON.stringify(order))

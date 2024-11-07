@@ -25,11 +25,14 @@ const sendNotificationViaWebhook = (title, params) => {
   })
 }
 
-router.get('/check', async (req, res) => {
+router.get('/', async (req, res) => {
   const { pair, apiSecret } = req.query
+  if (!pair) {
+    return res.json({ status: 'params_missing' })
+  }
   if (!otcConfig.supportPairs.includes(pair)) return res.json({ status: 'unsupported_pair' })
   try {
-    const price = await knex.select().from('otc_pricing').where({ pair }).orderBy('expire_timestamp', 'desc').first()
+    const price = await knex.select(['id', 'pair', 'buy_price', 'sell_price', 'timestamp', 'expire_timestamp']).from('otc_pricing').where({ pair }).orderBy('expire_timestamp', 'desc').first()
     if (price) {
       if (price.expire_timestamp < Date.now()) {
         sendNotificationViaWebhook('Swap Pricing System Issue', { msg: 'Swap cannot quote latest price' })
@@ -44,7 +47,7 @@ router.get('/check', async (req, res) => {
       res.setHeader('X-SIGNATURE', signature)
       return res.json({ status: 'success', data: price })
     } else {
-      return res.json({ status: 'system_error' })
+      return res.json({ status: 'price_not_exist' })
     }
   } catch (err) {
     return res.json({ status: 'system_error' })

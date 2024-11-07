@@ -18,10 +18,10 @@ CREATE TABLE IF NOT EXISTS `hashnut_otc_orders` (
   `price_id` char(36) NOT NULL,
   `create_time` bigint DEFAULT NULL,
   `expire_time` bigint DEFAULT NULL,
-  `status` enum('CREATED','EXPIRED','USER_CONFIRMED','FAILED','BALANCE_DEDUCTING','BALANCE_DEDUCTED','SETTLING','SETTLED') DEFAULT 'CREATED',
+  `status` enum('CREATED', 'RECEIVED', 'SENDING', 'COMPLETED') DEFAULT 'CREATED',
   `notification_sent` tinyint(1) DEFAULT '0',
   `notification_sent_timestamp` datetime(6) DEFAULT NULL,
-  `client_order_id` char(64) DEFAULT NULL,
+  `merchant_ref_id` char(64) DEFAULT NULL,
   `price` decimal(65,8) NOT NULL,
   `stage1_operator` char(32) DEFAULT NULL,
   `stage2_operator` char(32) DEFAULT NULL,
@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `hashnut_otc_orders` (
   KEY `idx_create_time` (`create_time`),
   KEY `idx_expire_time` (`expire_time`),
   KEY `price_id` (`price_id`),
+  UNIQUE KEY `merchant_ref_id` (`merchant_ref_id`),
   CONSTRAINT `online_otc_orders_ibfk_1` FOREIGN KEY (`price_id`) REFERENCES `otc_pricing` (`id`)
 );
 

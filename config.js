@@ -18,12 +18,12 @@ const config = {
   },
   coinutBankAccount: {
     USD: {
-      name: 'COINUT PTE LTD',
+      beneficiaryName: 'COINUT PTE LTD',
       accountNo: '0729075441',
       bankName: 'DBS Bank',
     },
     SGD: {
-      name: 'COINUT PTE LTD',
+      beneficiaryName: 'COINUT PTE LTD',
       accountNo: '0729075441',
       bankName: 'DBS Bank',
     }
