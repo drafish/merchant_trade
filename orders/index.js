@@ -27,6 +27,9 @@ router.post('/new', async (req, res) => {
     if (otcPrice.expire_timestamp < Date.now()) {
       return res.json({ status: 'price_outdated' })
     }
+    if (otcPrice.pair !== pair) {
+      return res.json({ status: 'pair_not_match_price_id' })
+    }
     const price = otcPrice[`${side.toLowerCase()}_price`]
     const amount = side === 'SELL' ? quantity : quantity / price
     if (Number(amount) < otcConfig.minQty[pair]) return { status: 'qty_too_small' }
